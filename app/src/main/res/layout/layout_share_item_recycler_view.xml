@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<androidx.cardview.widget.CardView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/shared_card_holder"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+>
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+        <!-- Nombre -->
+        <TextView
+                android:id="@+id/name_holder"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:text="Centro Turistico Test123"
+                android:textSize="22dp"
+                android:textColor="@android:color/black"
+                android:fontFamily="sans-serif-thin"
+                android:textFontWeight="230"
+        />
+
+        <View
+                android:layout_width="match_parent"
+                android:layout_height="0.3dp"
+                android:background="@android:color/black"/>
+
+        <!-- Direccion -->
+
+        <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="Avenida 1 via al mar calle No. 123."
+                android:textSize="12dp"
+                android:id="@+id/address_holder"
+                android:textStyle="italic"
+        />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+</androidx.cardview.widget.CardView>
