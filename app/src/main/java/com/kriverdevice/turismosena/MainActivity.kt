@@ -1,21 +1,16 @@
 package com.kriverdevice.turismosena
 
 import android.os.Bundle
-import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.google.android.material.snackbar.Snackbar
-import com.google.android.material.tabs.TabLayout
-import androidx.viewpager.widget.ViewPager
 import androidx.appcompat.app.AppCompatActivity
-import android.widget.Toast
 import androidx.fragment.app.Fragment
-import com.kriverdevice.turismosena.R
-import com.kriverdevice.turismosena.application.Constants
-import com.kriverdevice.turismosena.application.HttpRequest
+import androidx.viewpager.widget.ViewPager
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.tabs.TabLayout
 import com.kriverdevice.turismosena.ui.main.SectionsPagerAdapter
 import com.kriverdevice.turismosena.ui.main.modules.Hoteles
 import com.kriverdevice.turismosena.ui.main.modules.Operadores
 import com.kriverdevice.turismosena.ui.main.modules.Sitios
-import org.json.JSONArray
+import com.kriverdevice.turismosena.ui.main.modules.shared.TurismoObject
 
 class MainActivity : AppCompatActivity(){
 
@@ -52,6 +47,23 @@ class MainActivity : AppCompatActivity(){
             Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show()*/
         }
+    }
+
+    fun getAllData() {
+
+    }
+
+    fun saveData(turismoObj: TurismoObject, module: Modules, action: Actions) {
+        if (action == Actions.ADD) {
+        }
+    }
+
+    enum class Modules {
+        SITES, HOTELS, OPERASTORS
+    }
+
+    enum class Actions {
+        ADD, UPDATE, DELETE
     }
 
 }
