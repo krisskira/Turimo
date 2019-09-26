@@ -32,12 +32,12 @@ class Adapter(
     class ViewHolder(itemView: View, onItemSelectedListener: RecyclerItemSelectedListener?) :
         RecyclerView.ViewHolder(itemView) {
 
-        var name: TextView
+        var description: TextView
         var address: TextView
         lateinit var turismoObject: TurismoObject
 
         init {
-            this.name = itemView.findViewById(R.id.name_holder)
+            this.description = itemView.findViewById(R.id.name_holder)
             this.address = itemView.findViewById(R.id.address_holder)
             itemView.setOnClickListener {
                 onItemSelectedListener?.onItemSelected(this.turismoObject)
@@ -45,19 +45,19 @@ class Adapter(
         }
 
         fun setData( turismoObject: TurismoObject ){
-            this.name.setText(turismoObject.name)
+            this.description.setText(turismoObject.description)
             this.address.setText(turismoObject.address)
             this.turismoObject = turismoObject
         }
 
         /*
         constructor(itemView: View) : super(itemView) {
-            this.name = itemView.findViewById<TextView>(R.id.name_holder)
+            this.description = itemView.findViewById<TextView>(R.id.name_holder)
             this.address = itemView.findViewById<TextView>(R.id.address_holder)
 
             itemView.setOnClickListener {
                 Log.d("***->", "Sera seleccionado un item... " )
-                Log.d("***->", "Item Seleccionado: " + turismoObject.name )
+                Log.d("***->", "Item Seleccionado: " + turismoObject.description )
             }
         }
         */

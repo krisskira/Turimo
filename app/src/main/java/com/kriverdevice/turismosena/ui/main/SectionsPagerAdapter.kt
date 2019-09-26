@@ -8,8 +8,8 @@ import com.kriverdevice.turismosena.R
 
 private val TAB_TITLES = arrayOf(
     R.string.tab_text_sitios,
-    R.string.tab_text_operadores,
-    R.string.tab_text_hoteles
+    R.string.tab_text_hoteles,
+    R.string.tab_text_operadores
 )
 
 class SectionsPagerAdapter(

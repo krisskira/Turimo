@@ -21,6 +21,7 @@ import com.kriverdevice.turismosena.ui.main.modules.shared.TurismoObject
  * A simple [Fragment] subclass.
  *
  */
+
 class TurismoObjectList : Fragment(), Modules, RecyclerItemSelectedListener {
 
     lateinit var recycler: RecyclerView
@@ -38,6 +39,7 @@ class TurismoObjectList : Fragment(), Modules, RecyclerItemSelectedListener {
         recycler.layoutManager = layoutManager
         adapter = Adapter(turismoObjects, this)
         recycler.adapter = adapter
+        adapter.notifyDataSetChanged()
         return view
     }
 
@@ -47,7 +49,7 @@ class TurismoObjectList : Fragment(), Modules, RecyclerItemSelectedListener {
     }
 
     override fun onItemSelected(turismoObject: TurismoObject) {
-        Toast.makeText(this.context, "***-> Item Selected: " + turismoObject.name, Toast.LENGTH_LONG).show();
+        Toast.makeText(this.context, "***-> Item Selected: " + turismoObject.description, Toast.LENGTH_LONG).show();
     }
 
     override fun refreshList() {
