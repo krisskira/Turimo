@@ -23,7 +23,18 @@ import com.kriverdevice.turismosena.ui.main.modules.shared.TurismoObject
 import org.json.JSONArray
 import org.json.JSONObject
 
-class MainActivity() : AppCompatActivity() {
+class MainActivity() : AppCompatActivity(), ViewPager.OnPageChangeListener {
+    override fun onPageScrollStateChanged(state: Int) {
+        //
+    }
+
+    override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
+        //
+    }
+
+    override fun onPageSelected(position: Int) {
+        //
+    }
 
     var viewPager: ViewPager? = null
     var tabs: TabLayout? = null
@@ -54,6 +65,9 @@ class MainActivity() : AppCompatActivity() {
 
         viewPager = findViewById(R.id.view_pager)
         viewPager!!.adapter = sectionsPagerAdapter
+        viewPager!!.currentItem = 1
+        //viewPager!!.offscreenPageLimit = 1
+        viewPager!!.addOnPageChangeListener(this)
 
         tabs = findViewById(R.id.tabs)
         tabs!!.setupWithViewPager(viewPager)
@@ -85,9 +99,9 @@ class MainActivity() : AppCompatActivity() {
                 hotelsList = TurismoObject.mapArray(hotelsArray)
                 operatorsList = TurismoObject.mapArray(operatorsArray)
 
-                hoteles.setData(hotelsList)//.refreshList()
+                hoteles.setData(hotelsList).refreshList()
                 operadores.setData(operatorsList)//.refreshList()
-                sitios.setData(sitesList).refreshList()
+                sitios.setData(sitesList)//.refreshList()
 
                 Log.i("***->Len ", "" + operatorsList.count() )
             },
