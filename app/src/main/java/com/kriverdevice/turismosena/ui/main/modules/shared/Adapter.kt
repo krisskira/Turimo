@@ -1,6 +1,5 @@
 package com.kriverdevice.turismosena.ui.main.modules.shared
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,7 +7,10 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.kriverdevice.turismosena.R
 
-class Adapter(private var turismoObjects: ArrayList<TurismoObject>, var onItemSelected: RecyclerItemSelected? ) : RecyclerView.Adapter<Adapter.ViewHolder>() {
+class Adapter(
+    private var turismoObjects: ArrayList<TurismoObject>,
+    var onItemSelectedListener: RecyclerItemSelectedListener?
+) : RecyclerView.Adapter<Adapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
 
@@ -16,7 +18,7 @@ class Adapter(private var turismoObjects: ArrayList<TurismoObject>, var onItemSe
                     .from(parent.context)
                     .inflate( R.layout.layout_share_item_recycler_view, parent,false);
 
-        return   ViewHolder(view, onItemSelected)
+        return ViewHolder(view, onItemSelectedListener)
     }
 
     override fun getItemCount(): Int {
@@ -27,7 +29,8 @@ class Adapter(private var turismoObjects: ArrayList<TurismoObject>, var onItemSe
         holder.setData(turismoObjects.get(position))
     }
 
-    class ViewHolder(itemView: View, onItemSelected: RecyclerItemSelected?) : RecyclerView.ViewHolder (itemView){
+    class ViewHolder(itemView: View, onItemSelectedListener: RecyclerItemSelectedListener?) :
+        RecyclerView.ViewHolder(itemView) {
 
         var name: TextView
         var address: TextView
@@ -37,7 +40,7 @@ class Adapter(private var turismoObjects: ArrayList<TurismoObject>, var onItemSe
             this.name = itemView.findViewById(R.id.name_holder)
             this.address = itemView.findViewById(R.id.address_holder)
             itemView.setOnClickListener {
-                onItemSelected?.onItemSelected(this.turismoObject)
+                onItemSelectedListener?.onItemSelected(this.turismoObject)
             }
         }
 

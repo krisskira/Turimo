@@ -2,13 +2,12 @@ package com.kriverdevice.turismosena.application
 
 import android.os.AsyncTask
 import android.util.Log
-import org.json.JSONArray
 import java.io.*
 import java.net.HttpURLConnection
 import java.net.URL
 
 sealed class Result {}
-data class Success(val data: JSONArray) : Result()
+data class Success(val data: String) : Result()
 data class Fail(val error: Error) : Result()
 
 class HttpRequest(
@@ -62,11 +61,12 @@ class HttpRequest(
             while (buildStringResponse(reader.readLine()));
 
             // Parce response to json array object
-            val data = JSONArray(bufferResponse.toString())
+            //val data = JSONArray(bufferResponse.toString())
             connection.disconnect()
-            return Success(data)
+            return Success(bufferResponse.toString())
 
         } catch (e: IOException) {
+            e.printStackTrace()
             return Fail(Error(e.message, e.cause))
         }
     }

@@ -1,5 +1,5 @@
 package com.kriverdevice.turismosena.ui.main.modules.shared
 
-interface RecyclerItemSelected {
+interface RecyclerItemSelectedListener {
     fun onItemSelected(turismoObject: TurismoObject)
 }

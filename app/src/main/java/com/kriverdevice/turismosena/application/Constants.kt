@@ -4,7 +4,7 @@ object Constants {
 
     internal var SERVER = "https://www.sena.tricky.kriverdevice.com/turismo-valle"
 
-    /*  Sitios   */
+    /*  TurismoObjectList   */
     var FETCH_SITES = Constants.SERVER + "/sitios/listSitios.php"
     var FETCH_EDIT_SITES = Constants.SERVER + "/sitios/editSites.php"
     var FETCH_ADD_SITES = Constants.SERVER + "/sitios/addSites.php"
