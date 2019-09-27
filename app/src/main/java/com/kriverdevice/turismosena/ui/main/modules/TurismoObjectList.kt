@@ -1,11 +1,10 @@
 package com.kriverdevice.turismosena.ui.main.modules
 
-
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -17,6 +16,9 @@ import com.kriverdevice.turismosena.ui.main.modules.shared.TurismoObject
 
 class TurismoObjectList : Fragment(), Modules, RecyclerItemSelectedListener {
 
+    val FLAG_LOG = "***-> FragmentList"
+    val BUNDLE = "BUNDLE"
+
     var recycler: RecyclerView? = null
     var adapter: Adapter? = null
     var turismoObjects = ArrayList<TurismoObject>()
@@ -25,13 +27,13 @@ class TurismoObjectList : Fragment(), Modules, RecyclerItemSelectedListener {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
+
         val view = inflater.inflate(R.layout.fragment_turismo_object_list, container, false)
         this.recycler = view.findViewById<RecyclerView>(R.id.shared_recycler_view);
         this.recycler?.layoutManager = LinearLayoutManager(this.context)
 
         if (savedInstanceState != null) {
-            turismoObjects = savedInstanceState.getParcelableArrayList("BUNDLE")
+            turismoObjects = savedInstanceState.getParcelableArrayList(BUNDLE)
         }
 
         this.adapter = Adapter(turismoObjects, this)
@@ -46,12 +48,8 @@ class TurismoObjectList : Fragment(), Modules, RecyclerItemSelectedListener {
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
-        outState.putParcelableArrayList("BUNDLE", turismoObjects)
+        outState.putParcelableArrayList(BUNDLE, turismoObjects)
         super.onSaveInstanceState(outState)
-    }
-
-    override fun onItemSelected(turismoObject: TurismoObject) {
-        Toast.makeText(this.context, "***-> Item Selected: " + turismoObject.id, Toast.LENGTH_LONG).show();
     }
 
     override fun refreshList() {
@@ -61,7 +59,24 @@ class TurismoObjectList : Fragment(), Modules, RecyclerItemSelectedListener {
     override fun setData(turismoObjects: ArrayList<TurismoObject>): Modules {
         this.turismoObjects.clear()
         this.turismoObjects.addAll(turismoObjects)
+        Log.d(FLAG_LOG, "Count total items to list: " + turismoObjects.count())
         return this
+    }
+
+    override fun sendEmail(email: String) {
+        Log.d(FLAG_LOG, "Send email to: " + email)
+    }
+
+    override fun goToWebSide(web: String) {
+        Log.d(FLAG_LOG, "Go to web: " + web)
+    }
+
+    override fun call(phone: String) {
+        Log.d(FLAG_LOG, "Call to: " + phone)
+    }
+
+    override fun goToForm(turismoObject: TurismoObject) {
+        Log.d(FLAG_LOG, "Send to form")
     }
 
 }

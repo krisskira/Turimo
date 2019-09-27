@@ -12,7 +12,7 @@ class FormActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_form)
 
-        val button = findViewById<Button>(R.id.cerra)
+        val button = findViewById<Button>(R.id.delete_button)
         button.setOnClickListener {
             val i = intent
             i.putExtra(Constants.sitesKey, "Resultadp")

@@ -1,16 +1,13 @@
 package com.kriverdevice.turismosena.ui.main.modules.shared
 
-import android.content.Intent
-import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.TextView
-import androidx.core.content.ContextCompat.startActivity
+import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.kriverdevice.turismosena.R
-
 
 class Adapter(
     private var turismoObjects: ArrayList<TurismoObject>,
@@ -35,33 +32,43 @@ class Adapter(
     }
 
     class ViewHolder(itemView: View, onItemSelectedListener: RecyclerItemSelectedListener?) :
-        RecyclerView.ViewHolder(itemView), View.OnClickListener {
+        RecyclerView.ViewHolder(itemView) {
 
-        override fun onClick(view: View?) {
-            try {
-                val callIntent = Intent(Intent.ACTION_CALL)
-                callIntent.data = Uri.parse("tel:${turismoObject.mobile_hone}")
-                startActivity(view!!.context, callIntent, null)
-            } catch (ex: Exception) {
-                ex.printStackTrace()
-            }
-        }
-
+        var item: CardView
         var description: TextView
         var address: TextView
         var phoneButtom: ImageButton
+        var localPhoneButtom: ImageButton
+        var emailButtom: ImageButton
+        var webButtom: ImageButton
+
         lateinit var turismoObject: TurismoObject
 
         init {
-            this.description = itemView.findViewById(com.kriverdevice.turismosena.R.id.name_holder)
+
+            this.item = itemView.findViewById(R.id.shared_card_holder)
+            this.description = itemView.findViewById(R.id.name_holder)
             this.address = itemView.findViewById(R.id.address_holder)
             this.phoneButtom = itemView.findViewById(R.id.mobile_phone_buttom)
+            this.localPhoneButtom = itemView.findViewById(R.id.local_phone_buttom)
+            this.emailButtom = itemView.findViewById(R.id.email_buttom)
+            this.webButtom = itemView.findViewById(R.id.web_buttom)
 
+            this.phoneButtom.setOnClickListener{
+                onItemSelectedListener?.call(this.turismoObject.mobile_hone)
+            }
+            this.localPhoneButtom.setOnClickListener{
+                onItemSelectedListener?.call(this.turismoObject.local_phone)
+            }
+            this.emailButtom.setOnClickListener{
+                onItemSelectedListener?.sendEmail(this.turismoObject.email)
+            }
+            this.webButtom.setOnClickListener{
+                onItemSelectedListener?.goToWebSide(this.turismoObject.web)
+            }
 
-            this.phoneButtom.setOnClickListener(this)
-
-            itemView.setOnClickListener {
-                onItemSelectedListener?.onItemSelected(this.turismoObject)
+            this.item.setOnClickListener {
+                onItemSelectedListener?.goToForm(this.turismoObject)
             }
         }
 
@@ -70,7 +77,6 @@ class Adapter(
             this.address.setText(turismoObject.address)
             this.turismoObject = turismoObject
         }
-
 
     }
 }

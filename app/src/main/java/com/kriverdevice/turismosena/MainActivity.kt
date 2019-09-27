@@ -5,9 +5,13 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
+import android.view.Menu
 import android.view.View
 import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SearchView
+import androidx.appcompat.widget.Toolbar
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.viewpager.widget.ViewPager
@@ -28,12 +32,15 @@ import com.kriverdevice.turismosena.ui.main.modules.TurismoObjectList
 import com.kriverdevice.turismosena.ui.main.modules.shared.TurismoObject
 import org.json.JSONObject
 
-class MainActivity() : AppCompatActivity(), ViewPager.OnPageChangeListener, View.OnClickListener {
+class MainActivity() : AppCompatActivity(), ViewPager.OnPageChangeListener, View.OnClickListener, SearchView.OnQueryTextListener {
+
+    val FLAG_LOG = "***-> MainActivity"
 
     var viewPager: ViewPager? = null
     var tabs: TabLayout? = null
     var fab: FloatingActionButton? = null
     var progressIndicator: ProgressBar? = null
+    var toolbar: Toolbar? = null
 
     var mRequestQueue: RequestQueue? = null
 
@@ -49,6 +56,9 @@ class MainActivity() : AppCompatActivity(), ViewPager.OnPageChangeListener, View
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        toolbar = findViewById(R.id.toolbar)
+        setSupportActionBar(toolbar)
 
         viewPager = findViewById(R.id.view_pager)
         tabs = findViewById(R.id.tabs)
@@ -84,6 +94,14 @@ class MainActivity() : AppCompatActivity(), ViewPager.OnPageChangeListener, View
         }
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_layout, menu)
+        val menuItem = menu?.findItem(R.id.app_bar_search)
+        val searchMenuView = menuItem?.actionView as SearchView
+        searchMenuView.setOnQueryTextListener(this)
+        return true
+    }
+
     override fun onSaveInstanceState(outState: Bundle) {
         outState.putParcelableArrayList(Constants.sitesKey, sitesList)
         outState.putParcelableArrayList(Constants.hotelsKey, hotelsList)
@@ -102,6 +120,22 @@ class MainActivity() : AppCompatActivity(), ViewPager.OnPageChangeListener, View
         this.operadores.setData(operatorsList)
 
         super.onRestoreInstanceState(savedInstanceState)
+    }
+
+    override fun onQueryTextChange(p0: String?): Boolean {
+        Log.d(FLAG_LOG, "Filtro parcial: " + p0)
+        when (viewPager?.currentItem) {
+            0 -> {
+                // Filtra para sitios
+            }
+            1 -> {
+                // Filtra para hoteles
+            }
+            else -> {
+                //Filtra para operadores
+            }
+        }
+        return true
     }
 
     override fun onClick(p0: View?) {
@@ -134,6 +168,7 @@ class MainActivity() : AppCompatActivity(), ViewPager.OnPageChangeListener, View
 
     override fun onPageScrollStateChanged(state: Int) {}
     override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {}
+    override fun onQueryTextSubmit(p0: String?): Boolean { return true }
 
     private fun loadAllData() {
 
@@ -146,7 +181,7 @@ class MainActivity() : AppCompatActivity(), ViewPager.OnPageChangeListener, View
             Response.ErrorListener { error ->
                 Snackbar.make(
                     findViewById(R.id.coordinatorlayout),
-                    "Ups! Fallo en la conexion. (${error.networkResponse.statusCode})",
+                    "Ups! Fallo en la conexion.",
                     Snackbar.LENGTH_INDEFINITE
                 )
                     .setAction("Reintentar", View.OnClickListener { loadAllData() })
@@ -166,6 +201,10 @@ class MainActivity() : AppCompatActivity(), ViewPager.OnPageChangeListener, View
         sitesList = TurismoObject.mapArray(sitesArray)
         hotelsList = TurismoObject.mapArray(hotelsArray)
         operatorsList = TurismoObject.mapArray(operatorsArray)
+
+        Log.d(FLAG_LOG, "Count Sites mapped: " + sitesList.count() )
+        Log.d(FLAG_LOG, "Count Hotels mapped: " + hotelsList.count() )
+        Log.d(FLAG_LOG, "Count Operators mapped: " + operatorsList.count() )
 
         sitios.setData(sitesList).refreshList()
         hoteles.setData(hotelsList)
