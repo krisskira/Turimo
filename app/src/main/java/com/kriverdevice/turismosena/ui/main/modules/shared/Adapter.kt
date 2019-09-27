@@ -1,11 +1,16 @@
 package com.kriverdevice.turismosena.ui.main.modules.shared
 
+import android.content.Intent
+import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
 import android.widget.TextView
+import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.kriverdevice.turismosena.R
+
 
 class Adapter(
     private var turismoObjects: ArrayList<TurismoObject>,
@@ -30,15 +35,31 @@ class Adapter(
     }
 
     class ViewHolder(itemView: View, onItemSelectedListener: RecyclerItemSelectedListener?) :
-        RecyclerView.ViewHolder(itemView) {
+        RecyclerView.ViewHolder(itemView), View.OnClickListener {
+
+        override fun onClick(view: View?) {
+            try {
+                val callIntent = Intent(Intent.ACTION_CALL)
+                callIntent.data = Uri.parse("tel:${turismoObject.mobile_hone}")
+                startActivity(view!!.context, callIntent, null)
+            } catch (ex: Exception) {
+                ex.printStackTrace()
+            }
+        }
 
         var description: TextView
         var address: TextView
+        var phoneButtom: ImageButton
         lateinit var turismoObject: TurismoObject
 
         init {
-            this.description = itemView.findViewById(R.id.name_holder)
+            this.description = itemView.findViewById(com.kriverdevice.turismosena.R.id.name_holder)
             this.address = itemView.findViewById(R.id.address_holder)
+            this.phoneButtom = itemView.findViewById(R.id.mobile_phone_buttom)
+
+
+            this.phoneButtom.setOnClickListener(this)
+
             itemView.setOnClickListener {
                 onItemSelectedListener?.onItemSelected(this.turismoObject)
             }
@@ -50,16 +71,6 @@ class Adapter(
             this.turismoObject = turismoObject
         }
 
-        /*
-        constructor(itemView: View) : super(itemView) {
-            this.description = itemView.findViewById<TextView>(R.id.name_holder)
-            this.address = itemView.findViewById<TextView>(R.id.address_holder)
 
-            itemView.setOnClickListener {
-                Log.d("***->", "Sera seleccionado un item... " )
-                Log.d("***->", "Item Seleccionado: " + turismoObject.description )
-            }
-        }
-        */
     }
 }

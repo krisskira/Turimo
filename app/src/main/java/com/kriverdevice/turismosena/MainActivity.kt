@@ -1,11 +1,14 @@
 package com.kriverdevice.turismosena
 
+import android.Manifest
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
-import android.os.Parcel
-import android.os.Parcelable
-import android.util.Log
 import android.view.View
+import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.viewpager.widget.ViewPager
 import com.android.volley.Request
@@ -17,42 +20,40 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayout
 import com.kriverdevice.turismosena.application.Constants
+import com.kriverdevice.turismosena.application.Constants.hotelsKey
+import com.kriverdevice.turismosena.application.Constants.operatorsKey
+import com.kriverdevice.turismosena.application.Constants.sitesKey
 import com.kriverdevice.turismosena.ui.main.SectionsPagerAdapter
 import com.kriverdevice.turismosena.ui.main.modules.TurismoObjectList
 import com.kriverdevice.turismosena.ui.main.modules.shared.TurismoObject
-import org.json.JSONArray
 import org.json.JSONObject
 
-class MainActivity() : AppCompatActivity(), ViewPager.OnPageChangeListener {
-    override fun onPageScrollStateChanged(state: Int) {
-        //
-    }
-
-    override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
-        //
-    }
-
-    override fun onPageSelected(position: Int) {
-        //
-    }
+class MainActivity() : AppCompatActivity(), ViewPager.OnPageChangeListener, View.OnClickListener {
 
     var viewPager: ViewPager? = null
     var tabs: TabLayout? = null
-    val fragments: ArrayList<Fragment> = ArrayList()
+    var fab: FloatingActionButton? = null
+    var progressIndicator: ProgressBar? = null
+
+    var mRequestQueue: RequestQueue? = null
 
     val sitios = TurismoObjectList()
     val operadores = TurismoObjectList()
     val hoteles = TurismoObjectList()
 
+    val fragments: ArrayList<TurismoObjectList> = ArrayList()
     var sitesList = ArrayList<TurismoObject>()
     var hotelsList = ArrayList<TurismoObject>()
     var operatorsList = ArrayList<TurismoObject>()
 
-    lateinit var mRequestQueue: RequestQueue
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        viewPager = findViewById(R.id.view_pager)
+        tabs = findViewById(R.id.tabs)
+        fab = findViewById(R.id.fab)
+        progressIndicator = findViewById(R.id.progressBar)
 
         mRequestQueue = Volley.newRequestQueue(this)
 
@@ -60,50 +61,87 @@ class MainActivity() : AppCompatActivity(), ViewPager.OnPageChangeListener {
         fragments.add(hoteles)
         fragments.add(operadores)
 
-        val sectionsPagerAdapter =
-            SectionsPagerAdapter(this, supportFragmentManager, fragments)
+        viewPager?.adapter = SectionsPagerAdapter(this, supportFragmentManager, fragments as ArrayList<Fragment>)
+        viewPager?.offscreenPageLimit = 3
 
-        viewPager = findViewById(R.id.view_pager)
-        viewPager!!.adapter = sectionsPagerAdapter
-        viewPager!!.currentItem = 1
-        //viewPager!!.offscreenPageLimit = 1
-        viewPager!!.addOnPageChangeListener(this)
+        tabs?.setupWithViewPager(viewPager)
 
-        tabs = findViewById(R.id.tabs)
-        tabs!!.setupWithViewPager(viewPager)
+        viewPager?.addOnPageChangeListener(this)
+        fab?.setOnClickListener(this)
 
-        val fab: FloatingActionButton = findViewById(R.id.fab)
+        if (savedInstanceState == null) {
+            loadAllData()
+        }
 
-        fab.setOnClickListener { view -> loadAllData() }
-        loadAllData()
+        if (Build.VERSION.SDK_INT > 22) {
+            if (ActivityCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.CALL_PHONE
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.CALL_PHONE), 1)
+            }
+        }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
+        outState.putParcelableArrayList(Constants.sitesKey, sitesList)
+        outState.putParcelableArrayList(Constants.hotelsKey, hotelsList)
+        outState.putParcelableArrayList(Constants.operatorsKey, operatorsList)
         super.onSaveInstanceState(outState)
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+
+        this.sitesList = savedInstanceState.getParcelableArrayList(sitesKey)
+        this.hotelsList = savedInstanceState.getParcelableArrayList(hotelsKey)
+        this.operatorsList = savedInstanceState.getParcelableArrayList(operatorsKey)
+
+        this.sitios.setData(sitesList)
+        this.hoteles.setData(hotelsList)
+        this.operadores.setData(operatorsList)
+
         super.onRestoreInstanceState(savedInstanceState)
     }
 
+    override fun onClick(p0: View?) {
 
-    private fun loadAllData(){
+        val moduleSelected = when (viewPager?.currentItem) {
+            0 -> sitesKey
+            1 -> hotelsKey
+            else -> operatorsKey
+        }
+
+        val i = Intent(this, FormActivity::class.java).apply {
+            putExtra("ACTION", "ADD")
+            putExtra("MODULE", moduleSelected)
+        }
+
+        startActivityForResult(i, 1000)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        /*val p = ProgressDialog(this)
+            p.setTitle("Progress")
+        p.show()*/
+        // progressBar.visibility = View.VISIBLE
+    }
+
+    override fun onPageSelected(position: Int) {
+        fragments.get(position).refreshList()
+    }
+
+    override fun onPageScrollStateChanged(state: Int) {}
+    override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {}
+
+    private fun loadAllData() {
+
+        progressIndicator?.visibility = View.VISIBLE
 
         val jsonObjectRequest = JsonObjectRequest(Request.Method.GET, Constants.ALL_DATA, null,
             Response.Listener { response ->
-                val sitesArray = response.getJSONArray("sites")
-                val hotelsArray = response.getJSONArray("hotels")
-                val operatorsArray = response.getJSONArray("operators")
-
-                sitesList = TurismoObject.mapArray(sitesArray)
-                hotelsList = TurismoObject.mapArray(hotelsArray)
-                operatorsList = TurismoObject.mapArray(operatorsArray)
-
-                hoteles.setData(hotelsList).refreshList()
-                operadores.setData(operatorsList)//.refreshList()
-                sitios.setData(sitesList)//.refreshList()
-
-                Log.i("***->Len ", "" + operatorsList.count() )
+                setDataList(response)
             },
             Response.ErrorListener { error ->
                 Snackbar.make(
@@ -116,9 +154,24 @@ class MainActivity() : AppCompatActivity(), ViewPager.OnPageChangeListener {
             }
         )
 
-        mRequestQueue.add(jsonObjectRequest)
+        mRequestQueue?.add(jsonObjectRequest)
     }
 
+    private fun setDataList(response: JSONObject) {
 
+        val sitesArray = response.getJSONArray(sitesKey)
+        val hotelsArray = response.getJSONArray(hotelsKey)
+        val operatorsArray = response.getJSONArray(operatorsKey)
+
+        sitesList = TurismoObject.mapArray(sitesArray)
+        hotelsList = TurismoObject.mapArray(hotelsArray)
+        operatorsList = TurismoObject.mapArray(operatorsArray)
+
+        sitios.setData(sitesList).refreshList()
+        hoteles.setData(hotelsList)
+        operadores.setData(operatorsList)
+
+        progressIndicator?.visibility = View.GONE
+    }
 
 }
