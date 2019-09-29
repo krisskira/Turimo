@@ -77,7 +77,7 @@
                         android:imeOptions="actionNext"
                         android:inputType="textPersonName"
                         android:lines="1"
-                        android:maxLength="15"
+                        android:maxLength="20"
                         android:nextFocusForward="@id/input_mobile_phone"
                         android:singleLine="true"
 

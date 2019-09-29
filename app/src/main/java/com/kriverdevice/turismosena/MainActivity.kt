@@ -9,7 +9,6 @@ import android.util.Log
 import android.view.Menu
 import android.view.View
 import android.widget.ProgressBar
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.appcompat.widget.Toolbar
@@ -182,12 +181,61 @@ class MainActivity : AppCompatActivity(), ViewPager.OnPageChangeListener, View.O
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        Log.d(TAG_LOG, "ActivityResult " + requestCode + " ResultCode: " + resultCode)
-        //finishActivity(requestCode)
-        /*val p = ProgressDialog(this)
-            p.setTitle("Progress")
-        p.show()*/
-        // progressBar.visibility = View.VISIBLE
+        if (resultCode == 0) return
+
+        var body: JSONObject? = null
+        var methodHttp: Int? = null
+
+        var urlModule = when (data?.extras?.getString("MODULE")) {
+            getString(R.string.tab_text_hoteles) -> Constants.HOTELS
+            getString(R.string.tab_text_sitios) -> Constants.SITES
+            getString(R.string.tab_text_operadores) -> Constants.OPERATORS
+            else -> Constants.ALL_DATA
+        }
+
+        val action = Constants.ACTIONS.valueOf(data!!.extras!!.getString("ACTION"))
+        when (action) {
+            ACTIONS.ADD -> {
+                val turismoObject: TurismoObject = data.extras!!.getParcelable("DATA")
+                body = JSONObject(turismoObject.toString())
+                methodHttp = Request.Method.POST
+                Log.d(TAG_LOG, "Request de tipo Post. $urlModule")
+                Log.d(TAG_LOG, "Body: $body")
+            }
+            ACTIONS.UPDATE -> {
+                val turismoObject: TurismoObject = data.extras!!.getParcelable("DATA")
+                urlModule += "/%s".format(turismoObject.id)
+                body = JSONObject(turismoObject.toString())
+                methodHttp = Request.Method.PUT
+                Log.d(TAG_LOG, "Request de tipo Update. $urlModule")
+                Log.d(TAG_LOG, "Body: $body")
+            }
+            ACTIONS.DELETE -> {
+                val id = data.extras?.getString("DATA")
+                urlModule += "/$id"
+                methodHttp = Request.Method.DELETE
+                Log.d(TAG_LOG, "Request de tipo Delete. $urlModule")
+            }
+        }
+
+        progressIndicator?.visibility = View.VISIBLE
+        val jsonObjectRequest = JsonObjectRequest(
+            methodHttp, urlModule, body,
+            Response.Listener { response ->
+                setDataList(response)
+            },
+            Response.ErrorListener { error ->
+                Log.e(TAG_LOG, "Oops START========")
+                error.printStackTrace()
+                Log.e(TAG_LOG, "Oops END==========")
+                Snackbar.make(
+                    findViewById(R.id.coordinatorlayout),
+                    "Ups! Fallo en la conexion.",
+                    Snackbar.LENGTH_INDEFINITE
+                ).show()
+            }
+        )
+        mRequestQueue?.add(jsonObjectRequest)
     }
 
     override fun onPageSelected(position: Int) {
@@ -231,35 +279,16 @@ class MainActivity : AppCompatActivity(), ViewPager.OnPageChangeListener, View.O
         hotelsList = TurismoObject.mapArray(hotelsArray)
         operatorsList = TurismoObject.mapArray(operatorsArray)
 
-        sitios.setData(sitesList).refreshList()
+        sitios.setData(sitesList)
         hoteles.setData(hotelsList)
         operadores.setData(operatorsList)
 
+        when (viewPager?.currentItem) {
+            0 -> sitios.refreshList()
+            1 -> hoteles.refreshList()
+            2 -> operadores.refreshList()
+        }
+
         progressIndicator?.visibility = View.GONE
     }
-
-
-    private fun sendData(method: Int, urlModule: String, turismoObject: TurismoObject) {
-        // method = Request.Method.PUT o POST
-
-
-        val jsonObjectRequest = JsonObjectRequest(
-            method, urlModule, JSONObject(turismoObject.toString()),
-            Response.Listener { response ->
-                Toast.makeText(this, response.toString(4), Toast.LENGTH_LONG).show()
-            },
-            Response.ErrorListener { error ->
-                error.printStackTrace()
-                Snackbar.make(
-                    findViewById(R.id.coordinatorlayout),
-                    "Ups! Fallo en la conexion.",
-                    Snackbar.LENGTH_INDEFINITE
-                )
-                    //.setAction("Reintentar", View.OnClickListener { loadAllData() })
-                    .show()
-            }
-        )
-        mRequestQueue?.add(jsonObjectRequest)
-    }
-
 }

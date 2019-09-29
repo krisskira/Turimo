@@ -98,6 +98,8 @@
                 android:clickable="true"
                 android:foreground="@drawable/effect_ripple_circular_holo_blue_dark"
                 android:rotation="28"
+                android:elevation="4dp"
+                android:translationZ="1dp"
                 android:src="@drawable/ic_phone_iphone_black_24dp"
                 android:tint="@android:color/white"/>
     </LinearLayout>

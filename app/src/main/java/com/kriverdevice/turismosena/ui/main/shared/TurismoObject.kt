@@ -8,6 +8,8 @@ import org.json.JSONObject
 
 class TurismoObject : Parcelable {
 
+    val TAG_LOG = "***-> Turismo Object"
+
     var id: String? = null
     lateinit var description: String
     lateinit var address: String
@@ -29,13 +31,13 @@ class TurismoObject : Parcelable {
         local_phone: String,
         web: String
     ) {
-        this.id = ""
-        this.description = ""
-        this.address = ""
-        this.email = ""
-        this.mobile_hone = ""
-        this.local_phone = ""
-        this.web = ""
+        this.id = id
+        this.description = description
+        this.address = address
+        this.email = email
+        this.mobile_hone = mobile_hone
+        this.local_phone = local_phone
+        this.web = web
     }
 
     // Map del JSON
@@ -93,8 +95,11 @@ class TurismoObject : Parcelable {
     }
 
     override fun toString(): String {
-        return "{\"description\":%s,\"address\":%s,\"email\":%s,\"mobile_hone\":%s,\"local_phone\":%s,\"webPage\":%s}"
-            .format(description, address, email, mobile_hone, local_phone, web)
+        return "{\"description\":\"$description\"," +
+                "\"address\":\"$address\"," +
+                "\"email\":\"$email\"," +
+                "\"mobile_hone\":\"$mobile_hone\"," +
+                "\"local_phone\":\"$local_phone\"," +
+                "\"web\":\"$web\"}"
     }
-
 }

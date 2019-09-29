@@ -3,6 +3,7 @@ package com.kriverdevice.turismosena
 import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.ImageView
@@ -146,11 +147,24 @@ class FormActivity : AppCompatActivity(), View.OnClickListener, View.OnFocusChan
 
         when (p0?.id) {
             R.id.save_button -> {
+
                 if (!validate()) return
+                var data = TurismoObject(
+                    id,
+                    description.text.toString(),
+                    address.text.toString(),
+                    email.text.toString(),
+                    mobilePhone.text.toString(),
+                    localPhone.text.toString(),
+                    web.text.toString()
+                )
+                Log.d(FLAG_LOG, "Objecto a almacenar: " + data.toString())
+                Log.d(FLAG_LOG, "Accion a ejecutar: ${actionRequest.name}")
+
                 val i = Intent(this, MainActivity::class.java).apply {
                     putExtra("ACTION", actionRequest.name)
                     putExtra("MODULE", moduleRequest)
-                    putExtra("DATA", turimoObject)
+                    putExtra("DATA", data)
                 }
                 setResult(Constants.FORM_SAVE, i)
                 finish()
