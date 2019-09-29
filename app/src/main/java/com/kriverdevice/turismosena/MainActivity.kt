@@ -9,6 +9,7 @@ import android.util.Log
 import android.view.Menu
 import android.view.View
 import android.widget.ProgressBar
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.appcompat.widget.Toolbar
@@ -24,17 +25,17 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayout
 import com.kriverdevice.turismosena.application.Constants
-import com.kriverdevice.turismosena.application.Constants.hotelsKey
-import com.kriverdevice.turismosena.application.Constants.operatorsKey
-import com.kriverdevice.turismosena.application.Constants.sitesKey
+import com.kriverdevice.turismosena.application.Constants.ACTIONS
+import com.kriverdevice.turismosena.application.Constants.MODULES
 import com.kriverdevice.turismosena.ui.main.SectionsPagerAdapter
 import com.kriverdevice.turismosena.ui.main.modules.TurismoObjectList
 import com.kriverdevice.turismosena.ui.main.modules.shared.TurismoObject
 import org.json.JSONObject
 
-class MainActivity() : AppCompatActivity(), ViewPager.OnPageChangeListener, View.OnClickListener, SearchView.OnQueryTextListener {
+class MainActivity : AppCompatActivity(), ViewPager.OnPageChangeListener, View.OnClickListener,
+    SearchView.OnQueryTextListener {
 
-    val FLAG_LOG = "***-> MainActivity"
+    private val TAG_LOG: String = "***-> MainActivity"
 
     var viewPager: ViewPager? = null
     var tabs: TabLayout? = null
@@ -103,17 +104,17 @@ class MainActivity() : AppCompatActivity(), ViewPager.OnPageChangeListener, View
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
-        outState.putParcelableArrayList(Constants.sitesKey, sitesList)
-        outState.putParcelableArrayList(Constants.hotelsKey, hotelsList)
-        outState.putParcelableArrayList(Constants.operatorsKey, operatorsList)
+        outState.putParcelableArrayList(MODULES.sites.name, sitesList)
+        outState.putParcelableArrayList(MODULES.hotels.name, hotelsList)
+        outState.putParcelableArrayList(MODULES.operators.name, operatorsList)
         super.onSaveInstanceState(outState)
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
 
-        this.sitesList = savedInstanceState.getParcelableArrayList(sitesKey)
-        this.hotelsList = savedInstanceState.getParcelableArrayList(hotelsKey)
-        this.operatorsList = savedInstanceState.getParcelableArrayList(operatorsKey)
+        this.sitesList = savedInstanceState.getParcelableArrayList(MODULES.sites.name)
+        this.hotelsList = savedInstanceState.getParcelableArrayList(MODULES.hotels.name)
+        this.operatorsList = savedInstanceState.getParcelableArrayList(MODULES.operators.name)
 
         this.sitios.setData(sitesList)
         this.hoteles.setData(hotelsList)
@@ -123,7 +124,7 @@ class MainActivity() : AppCompatActivity(), ViewPager.OnPageChangeListener, View
     }
 
     override fun onQueryTextChange(p0: String?): Boolean {
-        Log.d(FLAG_LOG, "Filtro parcial: " + p0)
+        Log.d(TAG_LOG, "Filtro parcial: " + p0)
         when (viewPager?.currentItem) {
             0 -> {
                 // Filtra para sitios
@@ -140,22 +141,33 @@ class MainActivity() : AppCompatActivity(), ViewPager.OnPageChangeListener, View
 
     override fun onClick(p0: View?) {
 
-        val moduleSelected = when (viewPager?.currentItem) {
-            0 -> sitesKey
-            1 -> hotelsKey
-            else -> operatorsKey
-        }
+        when (p0?.id) {
 
-        val i = Intent(this, FormActivity::class.java).apply {
-            putExtra("ACTION", "ADD")
-            putExtra("MODULE", moduleSelected)
-        }
+            R.id.fab -> {
+                val moduleSelected = when (viewPager?.currentItem) {
+                    0 -> getString(R.string.tab_text_sitios)
+                    1 -> getString(R.string.tab_text_hoteles)
+                    else -> getString(R.string.tab_text_operadores)
+                }
 
-        startActivityForResult(i, 1000)
+                val i = Intent(this, FormActivity::class.java).apply {
+                    putExtra("ACTION", ACTIONS.ADD.name)
+                    putExtra("MODULE", moduleSelected)
+                }
+                startActivityForResult(i, Constants.FORM)
+            }
+            // retry action from snack bar
+            else -> {
+                Toast.makeText(this, "Vista onCLick: " + p0?.id, Toast.LENGTH_LONG).show()
+                loadAllData()
+            }
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
+        Log.d(TAG_LOG, "ActivityResult " + requestCode + " ResultCode: " + resultCode)
+        //finishActivity(requestCode)
         /*val p = ProgressDialog(this)
             p.setTitle("Progress")
         p.show()*/
@@ -163,12 +175,14 @@ class MainActivity() : AppCompatActivity(), ViewPager.OnPageChangeListener, View
     }
 
     override fun onPageSelected(position: Int) {
-        fragments.get(position).refreshList()
+        fragments[position].refreshList()
     }
 
     override fun onPageScrollStateChanged(state: Int) {}
     override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {}
-    override fun onQueryTextSubmit(p0: String?): Boolean { return true }
+    override fun onQueryTextSubmit(p0: String?): Boolean {
+        return true
+    }
 
     private fun loadAllData() {
 
@@ -184,7 +198,7 @@ class MainActivity() : AppCompatActivity(), ViewPager.OnPageChangeListener, View
                     "Ups! Fallo en la conexion.",
                     Snackbar.LENGTH_INDEFINITE
                 )
-                    .setAction("Reintentar", View.OnClickListener { loadAllData() })
+                    .setAction("Reintentar", this)
                     .show()
             }
         )
@@ -194,23 +208,43 @@ class MainActivity() : AppCompatActivity(), ViewPager.OnPageChangeListener, View
 
     private fun setDataList(response: JSONObject) {
 
-        val sitesArray = response.getJSONArray(sitesKey)
-        val hotelsArray = response.getJSONArray(hotelsKey)
-        val operatorsArray = response.getJSONArray(operatorsKey)
+        val sitesArray = response.getJSONArray(MODULES.sites.name)
+        val hotelsArray = response.getJSONArray(MODULES.hotels.name)
+        val operatorsArray = response.getJSONArray(MODULES.operators.name)
 
         sitesList = TurismoObject.mapArray(sitesArray)
         hotelsList = TurismoObject.mapArray(hotelsArray)
         operatorsList = TurismoObject.mapArray(operatorsArray)
-
-        Log.d(FLAG_LOG, "Count Sites mapped: " + sitesList.count() )
-        Log.d(FLAG_LOG, "Count Hotels mapped: " + hotelsList.count() )
-        Log.d(FLAG_LOG, "Count Operators mapped: " + operatorsList.count() )
 
         sitios.setData(sitesList).refreshList()
         hoteles.setData(hotelsList)
         operadores.setData(operatorsList)
 
         progressIndicator?.visibility = View.GONE
+    }
+
+
+    private fun sendData(method: Int, urlModule: String, turismoObject: TurismoObject) {
+        // method = Request.Method.PUT o POST
+
+
+        val jsonObjectRequest = JsonObjectRequest(
+            method, urlModule, JSONObject(turismoObject.toString()),
+            Response.Listener { response ->
+                Toast.makeText(this, response.toString(4), Toast.LENGTH_LONG).show()
+            },
+            Response.ErrorListener { error ->
+                error.printStackTrace()
+                Snackbar.make(
+                    findViewById(R.id.coordinatorlayout),
+                    "Ups! Fallo en la conexion.",
+                    Snackbar.LENGTH_INDEFINITE
+                )
+                    //.setAction("Reintentar", View.OnClickListener { loadAllData() })
+                    .show()
+            }
+        )
+        mRequestQueue?.add(jsonObjectRequest)
     }
 
 }

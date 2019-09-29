@@ -1,9 +1,18 @@
 package com.kriverdevice.turismosena.application
 
 object Constants {
-    val sitesKey = "sites"
-    val hotelsKey = "hotels"
-    val operatorsKey = "operators"
+
+    val FORM: Int = 1000
+    val FORM_SAVE: Int = 1001
+    val FORM_DELETE: Int = 1002
+
+    enum class ACTIONS {
+        ADD, UPDATE, DELETE
+    }
+
+    enum class MODULES {
+        sites, hotels, operators
+    }
 
     internal var SERVER = "https://turismo-sena.herokuapp.com"
 
@@ -11,12 +20,11 @@ object Constants {
     val ALL_DATA = Constants.SERVER
 
     /*  Sites   */
-    val SITES = Constants.SERVER + "/" + sitesKey
+    val SITES = Constants.SERVER + "/" + MODULES.sites.name
 
     /*  Hoteles */
-    val HOTELS = Constants.SERVER + "/" + hotelsKey
+    val HOTELS = Constants.SERVER + "/" + MODULES.hotels.name
 
     /*  Operadores */
-    val OPERATORS = Constants.SERVER + "/" + operatorsKey
-
+    val OPERATORS = Constants.SERVER + "/" + MODULES.operators.name
 }

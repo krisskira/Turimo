@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context=".FormActivity">
+                                                     xmlns:app="http://schemas.android.com/apk/res-auto"
+                                                     xmlns:tools="http://schemas.android.com/tools"
+                                                     android:layout_width="match_parent"
+                                                     android:layout_height="match_parent"
+                                                     tools:context=".FormActivity">
 
     <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/appBarLayout"
@@ -17,41 +17,33 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="left"
+                android:adjustViewBounds="true"
                 android:fitsSystemWindows="true"
+                android:scaleType="fitXY"
                 app:contentScrim="?attr/colorPrimary"
                 app:layout_scrollFlags="scroll|exitUntilCollapsed"
                 app:title="@string/app_name">
 
+            <ImageView
+                    android:id="@+id/module_image_background"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop"
+                    android:src="@mipmap/hoteles"
+                    app:layout_collapseMode="parallax"/>
+
             <FrameLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="#ffffff">
-
-                <ImageView
-                        android:id="@+id/imageViewCollapsing"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:scaleType="centerCrop"
-                        android:src="@mipmap/hoteles"
-                        app:layout_collapseMode="parallax" />
-
-
-                <FrameLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:background="#B3000000" />
-            </FrameLayout>
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="#B3000000"/>
 
             <androidx.appcompat.widget.Toolbar
                     android:id="@+id/toolbar"
                     android:layout_width="match_parent"
                     android:layout_height="?attr/actionBarSize"
-                    android:layout_gravity="left"
-                    android:gravity="left"
                     app:layout_collapseMode="pin"
                     app:navigationIcon="@drawable/ic_reply_black_24dp"
-                    app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
-
+                    app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
         </com.google.android.material.appbar.CollapsingToolbarLayout>
 
     </com.google.android.material.appbar.AppBarLayout>
@@ -60,7 +52,6 @@
     <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_gravity="fill_vertical"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
@@ -80,39 +71,72 @@
                         android:id="@+id/input_name"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:drawableLeft="@drawable/ic_edit_black_24dp"
+                        android:drawablePadding="8dp"
+                        android:drawableTint="@android:color/darker_gray"
+                        android:imeOptions="actionNext"
+                        android:inputType="textPersonName"
                         android:lines="1"
-                        android:maxLength="15" />
+                        android:maxLength="15"
+                        android:nextFocusForward="@id/input_mobile_phone"
+                        android:singleLine="true"
+
+                />
             </com.google.android.material.textfield.TextInputLayout>
 
-            <com.google.android.material.textfield.TextInputLayout
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:hint="@string/input_mobile_phone">
+                    android:orientation="horizontal"
+            >
 
-                <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/input_mobile_phone"
+                <com.google.android.material.textfield.TextInputLayout
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:lines="1"
-                        android:maxLength="15" />
-            </com.google.android.material.textfield.TextInputLayout>
+                        android:layout_marginTop="16dp"
+                        android:layout_marginRight="4dp"
+                        android:layout_weight="1"
+                        android:hint="@string/input_mobile_phone">
 
-            <com.google.android.material.textfield.TextInputLayout
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:hint="@string/input_local_phone">
+                    <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/input_mobile_phone"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:drawableLeft="@drawable/ic_phone_iphone_black_small_24dp"
+                            android:drawablePadding="8dp"
+                            android:drawableTint="@android:color/darker_gray"
+                            android:imeOptions="actionNext"
+                            android:inputType="number"
+                            android:lines="1"
+                            android:maxLength="10"
+                            android:singleLine="true"/>
+                </com.google.android.material.textfield.TextInputLayout>
 
-                <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/input_local_phone"
+                <com.google.android.material.textfield.TextInputLayout
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:lines="1"
-                        android:maxLength="15" />
-            </com.google.android.material.textfield.TextInputLayout>
+                        android:layout_marginLeft="4dp"
+                        android:layout_marginTop="16dp"
+                        android:layout_weight="1"
+                        android:hint="@string/input_local_phone">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/input_local_phone"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:drawableLeft="@drawable/ic_phone_black_24dp"
+                            android:drawablePadding="8dp"
+                            android:drawableTint="@android:color/darker_gray"
+                            android:imeOptions="actionNext"
+                            android:inputType="number"
+                            android:lines="1"
+                            android:maxLength="7"
+                            android:singleLine="true"/>
+                </com.google.android.material.textfield.TextInputLayout>
+
+            </LinearLayout>
 
             <com.google.android.material.textfield.TextInputLayout
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -125,8 +149,35 @@
                         android:id="@+id/input_web"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:drawableLeft="@drawable/ic_public_black_24dp"
+                        android:drawablePadding="8dp"
+                        android:drawableTint="@android:color/darker_gray"
+                        android:imeOptions="actionNext"
+                        android:inputType="textUri"
                         android:lines="1"
-                        android:maxLength="15" />
+                        android:maxLength="50"
+                        android:singleLine="true"/>
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:hint="@string/input_email">
+
+                <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/input_email"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:drawableLeft="@drawable/ic_email_black_24dp"
+                        android:drawablePadding="8dp"
+                        android:drawableTint="@android:color/darker_gray"
+                        android:imeOptions="actionNext"
+                        android:inputType="textUri"
+                        android:lines="1"
+                        android:maxLength="50"
+                        android:singleLine="true"/>
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
@@ -139,11 +190,17 @@
                         android:id="@+id/input_address"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:drawableLeft="@drawable/ic_location_on_black_24dp"
+                        android:drawablePadding="8dp"
+                        android:drawableTint="@android:color/darker_gray"
                         android:gravity="top|left"
                         android:hint="@string/input_addres"
+                        android:imeOptions="actionDone"
+                        android:inputType="textPostalAddress"
                         android:lines="3"
-                        android:maxLength="15"
-                        android:maxLines="3" />
+                        android:maxLength="50"
+                        android:maxLines="3"
+                        android:nextFocusForward="@id/save_button"/>
             </com.google.android.material.textfield.TextInputLayout>
 
             <Button
@@ -151,30 +208,29 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="right"
-                    android:background="@drawable/rectangle_background"
+                    android:layout_marginTop="16dp"
+                    android:background="@drawable/ripple_background"
                     android:drawableLeft="@drawable/ic_delete_forever_black_24dp"
                     android:drawablePadding="8dp"
-                    android:drawableTint="@android:color/holo_red_dark"
-                    android:layout_marginTop="16dp"
+                    android:drawableTint="@android:color/holo_red_light"
                     android:padding="12dp"
                     android:text="@string/menu_delete"
-                    android:textColor="@android:color/holo_red_dark"
-                    android:tint="@android:color/holo_red_dark" />
+                    android:textColor="@android:color/holo_red_light"
+                    android:textStyle="bold"
+                    android:tint="@android:color/holo_red_dark"/>
 
         </LinearLayout>
-
-
     </androidx.core.widget.NestedScrollView>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/save_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginRight="16dp"
-            android:background="@drawable/ripple_background"
+            android:clickable="true"
             android:src="@drawable/ic_save_black_24dp"
             android:tint="@android:color/white"
-            app:fabSize="mini"
             app:layout_anchor="@id/collapsingToolbarLayout"
-            app:layout_anchorGravity="bottom|end" />
+            app:layout_anchorGravity="bottom|end"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

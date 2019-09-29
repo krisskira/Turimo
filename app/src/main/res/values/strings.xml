@@ -9,9 +9,14 @@
     <string name="search">Buscar</string>
     <string name="input_name">Nombre:</string>
     <string name="input_addres">Dirección:</string>
-    <string name="input_local_phone">Teléfono local:</string>
-    <string name="input_mobile_phone">Teléfono celular:</string>
+    <string name="input_local_phone">Teléfono:</string>
+    <string name="input_mobile_phone">Celular:</string>
     <string name="input_web">Página web:</string>
     <string name="menu_delete">Eliminar</string>
+    <string name="menu_cancelar">Cancelar</string>
     <string name="menu_edit">Editar</string>
+    <string name="input_email">Email:</string>
+    <string name="msg_required">Este campo es requerido.</string>
+    <string name="Eliminar">Eliminar</string>
+    <string name="delete_message">Esta seguro de eliminar %s de %s?</string>
 </resources>
