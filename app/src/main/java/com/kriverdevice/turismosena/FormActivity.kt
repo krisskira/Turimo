@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import android.widget.ImageView
-import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
@@ -16,7 +15,7 @@ import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.kriverdevice.turismosena.R.*
 import com.kriverdevice.turismosena.application.Constants
-import com.kriverdevice.turismosena.ui.main.modules.shared.TurismoObject
+import com.kriverdevice.turismosena.ui.main.shared.TurismoObject
 
 
 class FormActivity : AppCompatActivity(), View.OnClickListener, View.OnFocusChangeListener,
@@ -76,7 +75,7 @@ class FormActivity : AppCompatActivity(), View.OnClickListener, View.OnFocusChan
         saveButton.setOnClickListener(this)
         deleteButton.setOnClickListener(this)
 
-        var bundle = when (savedInstanceState) {
+        val bundle = when (savedInstanceState) {
             null -> intent.extras
             else -> savedInstanceState
         }
@@ -86,15 +85,9 @@ class FormActivity : AppCompatActivity(), View.OnClickListener, View.OnFocusChan
         collapsingToolbarLayout.title = moduleRequest
 
         when (moduleRequest) {
-            getString(string.tab_text_sitios) -> {
-                imageBackGround.setImageResource(mipmap.sitios)
-            }
-            getString(string.tab_text_hoteles) -> {
-                imageBackGround.setImageResource(mipmap.hoteles)
-            }
-            getString(string.tab_text_operadores) -> {
-                imageBackGround.setImageResource(mipmap.operadores)
-            }
+            getString(string.tab_text_sitios) -> imageBackGround.setImageResource(mipmap.sitios)
+            getString(string.tab_text_hoteles) -> imageBackGround.setImageResource(mipmap.hoteles)
+            getString(string.tab_text_operadores) -> imageBackGround.setImageResource(mipmap.operadores)
         }
         imageBackGround.scaleType = ImageView.ScaleType.CENTER_CROP
 
@@ -122,10 +115,6 @@ class FormActivity : AppCompatActivity(), View.OnClickListener, View.OnFocusChan
                 web.setText(turimoObject?.web)
                 address.setText(turimoObject?.address)
                 email.setText(turimoObject?.email)
-            }
-
-            else -> {
-                Toast.makeText(this, "Oops..." + FLAG_LOG, Toast.LENGTH_LONG).show()
             }
         }
     }
@@ -175,10 +164,6 @@ class FormActivity : AppCompatActivity(), View.OnClickListener, View.OnFocusChan
                     .setNegativeButton(R.string.menu_delete, this)
                     .setPositiveButton(R.string.menu_cancelar, this)
                     .show()
-            }
-
-            else -> {
-                Toast.makeText(this, "Oops", Toast.LENGTH_LONG).show()
             }
         }
     }

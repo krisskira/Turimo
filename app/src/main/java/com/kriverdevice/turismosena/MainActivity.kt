@@ -27,12 +27,13 @@ import com.google.android.material.tabs.TabLayout
 import com.kriverdevice.turismosena.application.Constants
 import com.kriverdevice.turismosena.application.Constants.ACTIONS
 import com.kriverdevice.turismosena.application.Constants.MODULES
+import com.kriverdevice.turismosena.ui.main.ListTurismoItemsFragment
 import com.kriverdevice.turismosena.ui.main.SectionsPagerAdapter
-import com.kriverdevice.turismosena.ui.main.modules.TurismoObjectList
-import com.kriverdevice.turismosena.ui.main.modules.shared.TurismoObject
+import com.kriverdevice.turismosena.ui.main.shared.TurismoItemListener
+import com.kriverdevice.turismosena.ui.main.shared.TurismoObject
 import org.json.JSONObject
 
-class MainActivity : AppCompatActivity(), ViewPager.OnPageChangeListener, View.OnClickListener,
+class MainActivity : AppCompatActivity(), ViewPager.OnPageChangeListener, View.OnClickListener, TurismoItemListener,
     SearchView.OnQueryTextListener {
 
     private val TAG_LOG: String = "***-> MainActivity"
@@ -45,11 +46,11 @@ class MainActivity : AppCompatActivity(), ViewPager.OnPageChangeListener, View.O
 
     var mRequestQueue: RequestQueue? = null
 
-    val sitios = TurismoObjectList()
-    val operadores = TurismoObjectList()
-    val hoteles = TurismoObjectList()
+    val sitios = ListTurismoItemsFragment()
+    val operadores = ListTurismoItemsFragment()
+    val hoteles = ListTurismoItemsFragment()
 
-    val fragments: ArrayList<TurismoObjectList> = ArrayList()
+    val fragments: ArrayList<ListTurismoItemsFragment> = ArrayList()
     var sitesList = ArrayList<TurismoObject>()
     var hotelsList = ArrayList<TurismoObject>()
     var operatorsList = ArrayList<TurismoObject>()
@@ -59,8 +60,6 @@ class MainActivity : AppCompatActivity(), ViewPager.OnPageChangeListener, View.O
         setContentView(R.layout.activity_main)
 
         toolbar = findViewById(R.id.toolbar)
-        setSupportActionBar(toolbar)
-
         viewPager = findViewById(R.id.view_pager)
         tabs = findViewById(R.id.tabs)
         fab = findViewById(R.id.fab)
@@ -75,10 +74,13 @@ class MainActivity : AppCompatActivity(), ViewPager.OnPageChangeListener, View.O
         viewPager?.adapter = SectionsPagerAdapter(this, supportFragmentManager, fragments as ArrayList<Fragment>)
         viewPager?.offscreenPageLimit = 3
 
+        setSupportActionBar(toolbar)
         tabs?.setupWithViewPager(viewPager)
-
         viewPager?.addOnPageChangeListener(this)
         fab?.setOnClickListener(this)
+        sitios.turismoItemListener = this
+        hoteles.turismoItemListener = this
+        operadores.turismoItemListener = this
 
         if (savedInstanceState == null) {
             loadAllData()
@@ -139,6 +141,21 @@ class MainActivity : AppCompatActivity(), ViewPager.OnPageChangeListener, View.O
         return true
     }
 
+    override fun onItemSelected(turismoObject: TurismoObject) {
+        val moduleSelected = when (viewPager?.currentItem) {
+            0 -> getString(R.string.tab_text_sitios)
+            1 -> getString(R.string.tab_text_hoteles)
+            else -> getString(R.string.tab_text_operadores)
+        }
+
+        val i = Intent(this, FormActivity::class.java).apply {
+            putExtra("ACTION", ACTIONS.UPDATE.name)
+            putExtra("MODULE", moduleSelected)
+            putExtra("DATA", turismoObject)
+        }
+        startActivityForResult(i, Constants.FORM)
+    }
+
     override fun onClick(p0: View?) {
 
         when (p0?.id) {
@@ -158,7 +175,6 @@ class MainActivity : AppCompatActivity(), ViewPager.OnPageChangeListener, View.O
             }
             // retry action from snack bar
             else -> {
-                Toast.makeText(this, "Vista onCLick: " + p0?.id, Toast.LENGTH_LONG).show()
                 loadAllData()
             }
         }
@@ -202,7 +218,6 @@ class MainActivity : AppCompatActivity(), ViewPager.OnPageChangeListener, View.O
                     .show()
             }
         )
-
         mRequestQueue?.add(jsonObjectRequest)
     }
 

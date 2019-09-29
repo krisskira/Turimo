@@ -1,4 +1,4 @@
-package com.kriverdevice.turismosena.ui.main.modules.shared
+package com.kriverdevice.turismosena.ui.main.shared
 
 import android.os.Parcel
 import android.os.Parcelable
@@ -8,13 +8,13 @@ import org.json.JSONObject
 
 class TurismoObject : Parcelable {
 
-    var id: String? = null;
-    lateinit var description: String;
-    lateinit var address: String;
-    lateinit var email: String;
-    lateinit var mobile_hone: String;
-    lateinit var local_phone: String;
-    lateinit var web: String;
+    var id: String? = null
+    lateinit var description: String
+    lateinit var address: String
+    lateinit var email: String
+    lateinit var mobile_hone: String
+    lateinit var local_phone: String
+    lateinit var web: String
 
     // Necesario para el parcelable
     constructor()

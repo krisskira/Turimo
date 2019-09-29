@@ -19,4 +19,5 @@
     <string name="msg_required">Este campo es requerido.</string>
     <string name="Eliminar">Eliminar</string>
     <string name="delete_message">Esta seguro de eliminar %s de %s?</string>
+    <string name="msg_user_email">Seleccione un cliente de correo:</string>
 </resources>

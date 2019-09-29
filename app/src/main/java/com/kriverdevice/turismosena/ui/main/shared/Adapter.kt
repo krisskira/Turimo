@@ -1,4 +1,4 @@
-package com.kriverdevice.turismosena.ui.main.modules.shared
+package com.kriverdevice.turismosena.ui.main.shared
 
 import android.view.LayoutInflater
 import android.view.View
@@ -18,7 +18,7 @@ class Adapter(
 
         val view = LayoutInflater
                     .from(parent.context)
-                    .inflate( R.layout.layout_share_item_recycler_view, parent,false);
+            .inflate(R.layout.layout_holder_turismo_item_recycler_view, parent, false)
 
         return ViewHolder(view, onItemSelectedListener)
     }
@@ -46,7 +46,7 @@ class Adapter(
 
         init {
 
-            this.item = itemView.findViewById(R.id.shared_card_holder)
+            this.item = itemView.findViewById(R.id.holder_turismo_item_card_view)
             this.description = itemView.findViewById(R.id.name_holder)
             this.address = itemView.findViewById(R.id.address_holder)
             this.phoneButtom = itemView.findViewById(R.id.mobile_phone_buttom)
@@ -73,8 +73,8 @@ class Adapter(
         }
 
         fun setData( turismoObject: TurismoObject ){
-            this.description.setText(turismoObject.description)
-            this.address.setText(turismoObject.address)
+            this.description.text = turismoObject.description
+            this.address.text = turismoObject.address
             this.turismoObject = turismoObject
         }
 

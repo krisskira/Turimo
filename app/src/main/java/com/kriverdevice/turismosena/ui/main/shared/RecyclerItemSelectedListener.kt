@@ -1,4 +1,4 @@
-package com.kriverdevice.turismosena.ui.main.modules.shared
+package com.kriverdevice.turismosena.ui.main.shared
 
 interface RecyclerItemSelectedListener {
     fun sendEmail(email:String)

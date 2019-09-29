@@ -2,15 +2,15 @@
 
 <androidx.cardview.widget.CardView
         xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/shared_card_holder"
+        android:id="@+id/holder_turismo_item_card_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
->
+        android:clickable="true"
+        android:foreground="@drawable/effect_ripple_rectangular_holo_blue_dark">
     <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-    >
+            android:orientation="horizontal">
 
         <androidx.appcompat.widget.LinearLayoutCompat
                 android:layout_width="wrap_content"
@@ -29,8 +29,7 @@
                     android:text="Centro Turistico Test123"
                     android:textColor="@android:color/black"
                     android:textFontWeight="230"
-                    android:textSize="26dp"
-            />
+                    android:textSize="26dp"/>
 
             <!-- Direccion -->
 
@@ -42,8 +41,7 @@
                     android:text="Avenida 1 via al mar calle No. 123."
                     android:textColor="@android:color/darker_gray"
                     android:textSize="14dp"
-                    android:textStyle="italic"
-            />
+                    android:textStyle="italic"/>
 
             <LinearLayout
                     android:layout_width="match_parent"
@@ -55,27 +53,30 @@
                         android:layout_height="48dp"
                         android:layout_margin="16dp"
                         android:background="@android:color/transparent"
+                        android:clickable="true"
+                        android:foreground="@drawable/effect_ripple_circular_holo_blue_dark"
                         android:src="@drawable/ic_email_black_24dp"
-                        android:tint="@android:color/holo_purple"
-                />
+                        android:tint="@android:color/holo_purple"/>
                 <androidx.appcompat.widget.AppCompatImageButton
                         android:id="@+id/web_buttom"
                         android:layout_width="48dp"
                         android:layout_height="48dp"
                         android:layout_margin="16dp"
                         android:background="@android:color/transparent"
+                        android:clickable="true"
+                        android:foreground="@drawable/effect_ripple_circular_holo_blue_dark"
                         android:src="@drawable/ic_public_black_24dp"
-                        android:tint="@android:color/holo_purple"
-                />
+                        android:tint="@android:color/holo_purple"/>
                 <androidx.appcompat.widget.AppCompatImageButton
                         android:id="@+id/local_phone_buttom"
                         android:layout_width="48dp"
                         android:layout_height="48dp"
                         android:layout_margin="16dp"
                         android:background="@android:color/transparent"
+                        android:clickable="true"
+                        android:foreground="@drawable/effect_ripple_circular_holo_blue_dark"
                         android:src="@drawable/ic_phone_black_24dp"
-                        android:tint="@android:color/holo_purple"
-                />
+                        android:tint="@android:color/holo_purple"/>
 
 
             </LinearLayout>
@@ -94,6 +95,8 @@
                 android:layout_margin="8dp"
                 android:layout_marginRight="8dp"
                 android:background="@drawable/shape_circular"
+                android:clickable="true"
+                android:foreground="@drawable/effect_ripple_circular_holo_blue_dark"
                 android:rotation="28"
                 android:src="@drawable/ic_phone_iphone_black_24dp"
                 android:tint="@android:color/white"/>

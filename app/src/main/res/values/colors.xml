@@ -3,5 +3,6 @@
     <color name="colorPrimary">#008577</color>
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#D81B60</color>
-    <color name="colorRipplePrimary">#60B71C1C</color>
+    <color name="colorRippleRed">#60B71C1C</color>
+    <color name="colorRippleHoloBlueDark">@android:color/holo_blue_dark</color>
 </resources>
