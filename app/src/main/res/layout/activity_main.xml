@@ -9,24 +9,27 @@
         tools:context="com.kriverdevice.turismosena.MainActivity">
 
     <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/appBarLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            app:expanded="true"
+            app:elevation="4dp"
             android:theme="@style/AppTheme.AppBarOverlay"
-            >
+    >
 
         <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:title="@string/app_name"
-                app:layout_scrollFlags="scroll|snap"
-                />
+                app:layout_scrollFlags="scroll|snap|exitUntilCollapsed"
+        />
 
         <com.google.android.material.tabs.TabLayout
                 android:id="@+id/tabs"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="?attr/colorPrimary" />
+                android:background="?attr/colorPrimary"/>
 
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -34,7 +37,7 @@
             android:id="@+id/view_pager"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fab"
@@ -42,7 +45,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"
             android:layout_margin="@dimen/fab_margin"
-            app:srcCompat="@drawable/ic_add_black_24dp" />
+            app:srcCompat="@drawable/ic_add_black_24dp"/>
 
     <ProgressBar
             android:id="@+id/progressBar"
@@ -54,6 +57,6 @@
             android:indeterminate="true"
             android:indeterminateBehavior="cycle"
             android:max="100"
-            android:visibility="gone" />
+            android:visibility="gone"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

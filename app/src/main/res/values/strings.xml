@@ -20,4 +20,5 @@
     <string name="Eliminar">Eliminar</string>
     <string name="delete_message">Esta seguro de eliminar %s de %s?</string>
     <string name="msg_user_email">Seleccione un cliente de correo:</string>
+    <string name="find_placeholder">Buscar:</string>
 </resources>

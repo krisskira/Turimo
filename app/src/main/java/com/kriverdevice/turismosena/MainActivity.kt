@@ -20,6 +20,7 @@ import com.android.volley.RequestQueue
 import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
+import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayout
@@ -42,6 +43,8 @@ class MainActivity : AppCompatActivity(), ViewPager.OnPageChangeListener, View.O
     var fab: FloatingActionButton? = null
     var progressIndicator: ProgressBar? = null
     var toolbar: Toolbar? = null
+    var searchMenuView: SearchView? = null
+    var appBarLayout: AppBarLayout? = null
 
     var mRequestQueue: RequestQueue? = null
 
@@ -63,6 +66,7 @@ class MainActivity : AppCompatActivity(), ViewPager.OnPageChangeListener, View.O
         tabs = findViewById(R.id.tabs)
         fab = findViewById(R.id.fab)
         progressIndicator = findViewById(R.id.progressBar)
+        appBarLayout = findViewById(R.id.appBarLayout)
 
         mRequestQueue = Volley.newRequestQueue(this)
 
@@ -80,6 +84,7 @@ class MainActivity : AppCompatActivity(), ViewPager.OnPageChangeListener, View.O
         sitios.turismoItemListener = this
         hoteles.turismoItemListener = this
         operadores.turismoItemListener = this
+        toolbar?.setCollapsible(true)
 
         if (savedInstanceState == null) {
             loadAllData()
@@ -95,22 +100,20 @@ class MainActivity : AppCompatActivity(), ViewPager.OnPageChangeListener, View.O
             }
         }
     }
-
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_layout, menu)
         val menuItem = menu?.findItem(R.id.app_bar_search)
-        val searchMenuView = menuItem?.actionView as SearchView
-        searchMenuView.setOnQueryTextListener(this)
+        searchMenuView = menuItem?.actionView as SearchView
+        searchMenuView?.setOnQueryTextListener(this)
+        searchMenuView?.queryHint = getString(R.string.find_placeholder)
         return true
     }
-
     override fun onSaveInstanceState(outState: Bundle) {
         outState.putParcelableArrayList(MODULES.sites.name, sitesList)
         outState.putParcelableArrayList(MODULES.hotels.name, hotelsList)
         outState.putParcelableArrayList(MODULES.operators.name, operatorsList)
         super.onSaveInstanceState(outState)
     }
-
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
 
         this.sitesList = savedInstanceState.getParcelableArrayList(MODULES.sites.name)
@@ -123,24 +126,37 @@ class MainActivity : AppCompatActivity(), ViewPager.OnPageChangeListener, View.O
 
         super.onRestoreInstanceState(savedInstanceState)
     }
-
     override fun onQueryTextChange(p0: String?): Boolean {
-        Log.d(TAG_LOG, "Filtro parcial: " + p0)
         when (viewPager?.currentItem) {
             0 -> {
                 // Filtra para sitios
+                val dataFiltered = sitesList.filter { it.description.contains(p0.toString(), true) }
+                val p = ArrayList<TurismoObject>()
+                p.addAll(dataFiltered)
+                sitios.setData(p)
+                sitios.refreshList()
             }
             1 -> {
                 // Filtra para hoteles
+                val dataFiltered = hotelsList.filter { it.description.contains(p0.toString(), true) }
+                val p = ArrayList<TurismoObject>()
+                p.addAll(dataFiltered)
+                hoteles.setData(p)
+                hoteles.refreshList()
             }
             else -> {
                 //Filtra para operadores
+                val dataFiltered = operatorsList.filter { it.description.contains(p0.toString(), true) }
+                val p = ArrayList<TurismoObject>()
+                p.addAll(dataFiltered)
+                operadores.setData(p)
+                operadores.refreshList()
             }
         }
-        return true
+        return false
     }
-
     override fun onItemSelected(turismoObject: TurismoObject) {
+
         val moduleSelected = when (viewPager?.currentItem) {
             0 -> getString(R.string.tab_text_sitios)
             1 -> getString(R.string.tab_text_hoteles)
@@ -154,7 +170,6 @@ class MainActivity : AppCompatActivity(), ViewPager.OnPageChangeListener, View.O
         }
         startActivityForResult(i, Constants.FORM)
     }
-
     override fun onClick(p0: View?) {
 
         when (p0?.id) {
@@ -178,7 +193,6 @@ class MainActivity : AppCompatActivity(), ViewPager.OnPageChangeListener, View.O
             }
         }
     }
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == 0) return
@@ -237,17 +251,22 @@ class MainActivity : AppCompatActivity(), ViewPager.OnPageChangeListener, View.O
         )
         mRequestQueue?.add(jsonObjectRequest)
     }
-
     override fun onPageSelected(position: Int) {
+
+        if (!searchMenuView?.isIconified!!) {
+            searchMenuView?.onActionViewCollapsed()
+            searchMenuView?.clearFocus()
+        }
+        sitios.setData(sitesList)
+        hoteles.setData(hotelsList)
+        operadores.setData(operatorsList)
         fragments[position].refreshList()
     }
-
     override fun onPageScrollStateChanged(state: Int) {}
     override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {}
     override fun onQueryTextSubmit(p0: String?): Boolean {
-        return true
+        return false
     }
-
     private fun loadAllData() {
 
         progressIndicator?.visibility = View.VISIBLE
@@ -268,7 +287,6 @@ class MainActivity : AppCompatActivity(), ViewPager.OnPageChangeListener, View.O
         )
         mRequestQueue?.add(jsonObjectRequest)
     }
-
     private fun setDataList(response: JSONObject) {
 
         val sitesArray = response.getJSONArray(MODULES.sites.name)
